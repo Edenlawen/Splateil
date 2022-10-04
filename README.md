@@ -1,1 +1,1 @@
-# Splatoon
+# Splateil
