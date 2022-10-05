@@ -2,6 +2,7 @@ from array import array
 from this import d
 import numpy as np
 import os
+import bonus
 
 
 def creerGrille(taille) :
@@ -15,8 +16,10 @@ def afficherGrille (grille) :
     return 0
 
 def creerPion1(grille) :
-    grille[0][0]=9
+    grille[5][5]=9
     pion=np.zeros(2)
+    pion[0]=5
+    pion[1]=5
     return grille, pion
 
 def creerPion2(grille) :
@@ -44,9 +47,15 @@ def movePown1(grid,pos):
         grid[x][y]=4
         pos[0]=x+1
     elif (step == "z") and (y!=len(grid)) :
-        grid[x-1][y]=9
-        grid[x][y]=4
-        pos[0]=x+-1
+        if (grid[x-1][y]==2) :
+            bonus.bombeAutour(grid,pos)
+            grid[x-1][y]=9
+            grid[x][y]=4
+            pos[0]=x+-1
+        else :
+            grid[x-1][y]=9
+            grid[x][y]=4
+            pos[0]=x+-1
     else :
         print("Impossible de se déplacer ici\n Recommencez\n")
         movePown1(grid,pos)
