@@ -11,4 +11,21 @@ def teleportation1(grid,pos) :
     pos[0]=x2
     pos[2]=y2
     return grid, pos
-    
+
+def bombeAutour(grid,pos):
+    x=int(pos[0])-1
+    y=int(pos[1])
+
+    grid[x-1][y-1]=4
+    grid[x-1][y]=4
+    grid[x-1][y+1]=4
+    grid[x][y-1]=4
+    grid[x][y+1]=4
+    grid[x+1][y-1]=4
+    grid[x+1][y]=4
+    grid[x+1][y+1]=4
+    return grid
+
+def poserBonus (grid, x, y):
+    grid[x][y]=2
+    return grid
