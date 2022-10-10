@@ -56,6 +56,10 @@ while running:
     screen.blit(pion_vert.image, pion_vert.position)
     screen.blit(pion_rouge.image, pion_rouge.position)
     
+    print(grille_jeu.nb_case_rouge())
+    print(grille_jeu.nb_case_verte())
+    print(grille_jeu.nb_case_blanche())
+    
     
     pygame.display.flip() 
     
