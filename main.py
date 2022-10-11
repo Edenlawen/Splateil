@@ -11,6 +11,8 @@ pygame.init()
 from grille import Grille
 from pion import Pion
 from Bombe import Bombe
+from teleportation import Teleportation
+from ligne import Ligne
 
 pygame.display.set_caption("Splateil")
 screen = pygame.display.set_mode((1080,720))
@@ -28,6 +30,20 @@ test_bombe.random()
 test_bombe2 = Bombe(415+5*25, 235+5*25, grille_jeu)
 test_bombe2.random()
 #test_bombe.invisible()
+
+tp_bleu = Teleportation(415+525, 235+525, 'images/TPB.png', grille_jeu)
+tp_bleu.random()
+
+tp_orange = Teleportation(415+525, 235+525, 'images/TPO.png', grille_jeu)
+tp_orange.random()
+
+test_ligne = Ligne(415, 235, grille_jeu)
+test_ligne.random()
+
+file = 'song/musique.mp3'
+#pygame.mixer.init()
+#pygame.mixer.music.load(file)
+#pygame.mixer.music.play(-1)
 
 
 while running:
@@ -52,14 +68,57 @@ while running:
         test_bombe2.explosion(2)
     if (pion_rouge.position.x == test_bombe2.position.x and pion_rouge.position.y == test_bombe2.position.y):
         test_bombe2.explosion(1)
+        
+    screen.blit(test_ligne.image, test_ligne.position)
+    if (pion_vert.position.x == test_ligne.position.x and pion_vert.position.y == test_ligne.position.y):
+        test_ligne.explosion(2)
+    if (pion_rouge.position.x == test_ligne.position.x and pion_rouge.position.y == test_ligne.position.y):
+        test_ligne.explosion(1)
+        
+    screen.blit(tp_bleu.image,tp_bleu.position)
+    screen.blit(tp_orange.image,tp_orange.position)
+    if(pion_rouge.position.x == tp_orange.position.x and pion_rouge.position.y == tp_orange.position.y):
+        tp_orange.teleporte(tp_bleu,pion_rouge)
+    #elif(pion_rouge.position.x == tp_bleu.position.x and pion_rouge.position.y == tp_bleu.position.y):
+        #tp_bleu.teleporte(tp_orange,pion_rouge)
+    elif(pion_vert.position.x == tp_bleu.position.x and pion_vert.position.y == tp_bleu.position.y):
+        tp_bleu.teleporte(tp_orange,pion_vert)
+    #elif(pion_vert.position.x == tp_orange.position.x and pion_vert.position.y == tp_orange.position.y):
+        #tp_orange.teleporte(tp_bleu,pion_vert)
+    
+    white=(253,239,228)
+    vert=(4,87,51)
+    rouge=(116,0,38)
+    black=(0,0,0)
+    fond_test=pygame.font.Font('freesansbold.ttf', 32)
+    redwin=fond_test.render('Le joueur Rouge a gagné',True,rouge,white)
+    greenwin=fond_test.render('Le joueur Vert a gagné',True,vert,white)
+    tie=fond_test.render('Egalité !',True,black,white)
+    
+    #screen.blit(test_teleporte.image,test_teleporte.position)
+    #screen.blit(test_teleporte2.image,test_teleporte2.position) 
     
     screen.blit(pion_vert.image, pion_vert.position)
     screen.blit(pion_rouge.image, pion_rouge.position)
+    whitecase=grille_jeu.nb_case_blanche()
     
-    print(grille_jeu.nb_case_rouge())
-    print(grille_jeu.nb_case_verte())
-    print(grille_jeu.nb_case_blanche())
+    greencase=grille_jeu.nb_case_verte()
+    redcase=grille_jeu.nb_case_rouge()
     
+    if whitecase==0 and greencase<redcase :
+        textdisplay=redwin.get_rect()
+        textdisplay.center=(530,150)
+        screen.blit(redwin,textdisplay)
+        
+    if whitecase==0 and greencase>redcase :
+        textdisplay=greenwin.get_rect()
+        textdisplay.center=(530,150)
+        screen.blit(greenwin,textdisplay)
+        
+    if whitecase==0 and greencase==redcase :
+        textdisplay=tie.get_rect()
+        textdisplay.center=(530,150)
+        screen.blit(tie,textdisplay)
     
     pygame.display.flip() 
     
@@ -67,33 +126,35 @@ while running:
     
     for event in pygame.event.get():
         
+        
+        
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-        
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                    grille_jeu.listecase[35].change_color(1)
-            elif event.key == pygame.K_b:
-                    grille_jeu.listecase[35].change_color(0)
             
-                    grille_jeu.listecase[35].change_color(2)
-            elif event.key == pygame.K_F5:
-                print('F5')
-                pion_rouge.position.x = 640
-                pion_rouge.position.y = 460
-                pion_vert.position.x = 415
-                pion_vert.position.y = 235
-                test_bombe.reactiver()
-                test_bombe.random()
-                test_bombe2.reactiver()
-                test_bombe2.random()
-                for k in range(0,100):
-                   grille_jeu.listecase[k].change_color(0)
-                   
-               
+        if whitecase!=0 :
         
-        if (grille_jeu.tour_joueur == 0):
+            if event.type == pygame.KEYDOWN :
+                if event.key == pygame.K_r:
+                        grille_jeu.listecase[35].change_color(1)
+                elif event.key == pygame.K_b:
+                        grille_jeu.listecase[35].change_color(0)
+                elif event.key == pygame.K_v:
+                        grille_jeu.listecase[35].change_color(2)
+                elif event.key == pygame.K_F5:
+                    pion_rouge.position.x = 640
+                    pion_rouge.position.y = 460
+                    pion_vert.position.x = 415
+                    pion_vert.position.y = 235
+                    test_bombe.reactiver()
+                    test_bombe.random()
+                    test_bombe2.reactiver()
+                    test_bombe2.random()
+                    for k in range(0,100):
+                        grille_jeu.listecase[k].change_color(0)
+                    
+                
+            
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     pion_rouge.move_gauche()
@@ -103,24 +164,40 @@ while running:
                     pion_rouge.move_up()
                 elif event.key == pygame.K_DOWN:
                     pion_rouge.move_down()
-        
-        if (grille_jeu.tour_joueur == 1):
+            
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_q:
                     pion_vert.move_gauche()
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_d:
                     pion_vert.move_droite()
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_z:
                     pion_vert.move_up()
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_s:
                     pion_vert.move_down()
-        
-        if event.type == pygame.KEYDOWN :
-            if event.key == pygame.K_SPACE:
-                if grille_jeu.tour_joueur == 0:
-                    grille_jeu.tour_joueur = 1
-                elif grille_jeu.tour_joueur == 1:
-                    grille_jeu.tour_joueur = 0
+            
+            if event.type == pygame.KEYDOWN :
+                if event.key == pygame.K_SPACE:
+                    if grille_jeu.tour_joueur == 0:
+                        grille_jeu.tour_joueur = 1
+                    elif grille_jeu.tour_joueur == 1:
+                        grille_jeu.tour_joueur = 0
+                
+        if event.type == pygame.KEYDOWN :        
+            if event.key == pygame.K_F5:
+                pion_rouge.position.x = 640
+                pion_rouge.position.y = 460
+                pion_vert.position.x = 415
+                pion_vert.position.y = 235
+                test_bombe.reactiver()
+                test_bombe.random()
+                test_bombe2.reactiver()
+                test_bombe2.random()
+                tp_bleu.random()
+                tp_orange.random()
+                test_ligne.reactiver()
+                test_ligne.random()
+                for k in range(0,100):
+                    grille_jeu.listecase[k].change_color(0)
                 
         
             
