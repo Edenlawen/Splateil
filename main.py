@@ -13,6 +13,7 @@ from pion import Pion
 from Bombe import Bombe
 from teleportation import Teleportation
 from ligne import Ligne
+from ligneV import LigneV
 
 pygame.display.set_caption("Splateil")
 screen = pygame.display.set_mode((1080,720))
@@ -29,7 +30,10 @@ test_bombe.random()
 
 test_bombe2 = Bombe(415+5*25, 235+5*25, grille_jeu)
 test_bombe2.random()
-#test_bombe.invisible()
+
+piegeB = Bombe(415+5*25, 235+5*25, grille_jeu)
+piegeB.random()
+#piegeB.invisible()
 
 tp_bleu = Teleportation(415+525, 235+525, 'images/TPB.png', grille_jeu)
 tp_bleu.random()
@@ -40,10 +44,22 @@ tp_orange.random()
 test_ligne = Ligne(415, 235, grille_jeu)
 test_ligne.random()
 
+test_ligne2 = LigneV(415, 235, grille_jeu)
+test_ligne2.random()
+
+
+
+ligneV = LigneV(415, 235, grille_jeu)
+ligneV.random()
+
+piegeL = Ligne(415, 235, grille_jeu)
+piegeL.random()
+#piegeL.invisible()
+
 file = 'song/musique.mp3'
-#pygame.mixer.init()
-#pygame.mixer.music.load(file)
-#pygame.mixer.music.play(-1)
+pygame.mixer.init()
+pygame.mixer.music.load(file)
+pygame.mixer.music.play(-1)
 
 
 while running:
@@ -74,6 +90,28 @@ while running:
         test_ligne.explosion(2)
     if (pion_rouge.position.x == test_ligne.position.x and pion_rouge.position.y == test_ligne.position.y):
         test_ligne.explosion(1)
+    screen.blit(test_ligne2.image, test_ligne2.position)
+    if (pion_vert.position.x == test_ligne2.position.x and pion_vert.position.y == test_ligne2.position.y):
+        test_ligne2.explosion(0)
+    if (pion_rouge.position.x == test_ligne2.position.x and pion_rouge.position.y == test_ligne2.position.y):
+        test_ligne2.explosion(0)
+        
+    screen.blit(ligneV.image, ligneV.position)
+    if (pion_vert.position.x == ligneV.position.x and pion_vert.position.y == ligneV.position.y):
+        ligneV.explosion(2)
+    if (pion_rouge.position.x == ligneV.position.x and pion_rouge.position.y == ligneV.position.y):
+        ligneV.explosion(1)
+      
+    screen.blit(piegeB.image, piegeB.position)
+    if (pion_vert.position.x == piegeB.position.x and pion_vert.position.y == piegeB.position.y):
+        piegeB.explosion(0)
+    if (pion_rouge.position.x == piegeB.position.x and pion_rouge.position.y == piegeB.position.y):
+        piegeB.explosion(0)
+    screen.blit(piegeL.image, piegeL.position)
+    if (pion_vert.position.x == piegeL.position.x and pion_vert.position.y == piegeL.position.y):
+        piegeL.explosion(0)
+    if (pion_rouge.position.x == piegeL.position.x and pion_rouge.position.y == piegeL.position.y):
+        piegeL.explosion(0)
         
     screen.blit(tp_bleu.image,tp_bleu.position)
     screen.blit(tp_orange.image,tp_orange.position)
@@ -86,6 +124,13 @@ while running:
     #elif(pion_vert.position.x == tp_orange.position.x and pion_vert.position.y == tp_orange.position.y):
         #tp_orange.teleporte(tp_bleu,pion_vert)
     
+    #screen.blit(test_teleporte.image,test_teleporte.position)
+    #screen.blit(test_teleporte2.image,test_teleporte2.position) 
+    
+    whitecase=grille_jeu.nb_case_blanche()
+    greencase=grille_jeu.nb_case_verte()
+    redcase=grille_jeu.nb_case_rouge()
+    
     white=(253,239,228)
     vert=(4,87,51)
     rouge=(116,0,38)
@@ -95,15 +140,18 @@ while running:
     greenwin=fond_test.render('Le joueur Vert a gagné',True,vert,white)
     tie=fond_test.render('Egalité !',True,black,white)
     
-    #screen.blit(test_teleporte.image,test_teleporte.position)
-    #screen.blit(test_teleporte2.image,test_teleporte2.position) 
+    redScore=fond_test.render('score rouge : ' + str(redcase),True,rouge,white)
+    redDisplay=redScore.get_rect()
+    redDisplay.center=(270,300)
+    screen.blit(redScore,redDisplay)
+    
+    greenScore=fond_test.render('score vert  : ' + str(greencase),True,vert,white)
+    greenDisplay=greenScore.get_rect()
+    greenDisplay.center=(800,300)
+    screen.blit(greenScore,greenDisplay)
     
     screen.blit(pion_vert.image, pion_vert.position)
     screen.blit(pion_rouge.image, pion_rouge.position)
-    whitecase=grille_jeu.nb_case_blanche()
-    
-    greencase=grille_jeu.nb_case_verte()
-    redcase=grille_jeu.nb_case_rouge()
     
     if whitecase==0 and greencase<redcase :
         textdisplay=redwin.get_rect()
@@ -188,14 +236,28 @@ while running:
                 pion_rouge.position.y = 460
                 pion_vert.position.x = 415
                 pion_vert.position.y = 235
+                
                 test_bombe.reactiver()
                 test_bombe.random()
                 test_bombe2.reactiver()
                 test_bombe2.random()
+               
                 tp_bleu.random()
                 tp_orange.random()
+               
                 test_ligne.reactiver()
                 test_ligne.random()
+                ligneV.reactiver()
+                ligneV.random()
+                
+                piegeB.reactiver()
+                piegeB.random()
+                #piegeB.invisible()
+                piegeL.reactiver()
+                piegeL.random()
+                #piegeL.invisible()
+                test_ligne2.reactiver()
+                test_ligne2.random()
                 for k in range(0,100):
                     grille_jeu.listecase[k].change_color(0)
                 
