@@ -14,6 +14,7 @@ from Bombe import Bombe
 from teleportation import Teleportation
 from ligne import Ligne
 from ligneV import LigneV
+from regle import Regle
 
 pygame.display.set_caption("Splateil")
 screen = pygame.display.set_mode((1080,720))
@@ -61,11 +62,13 @@ pygame.mixer.init()
 pygame.mixer.music.load(file)
 pygame.mixer.music.play(-1)
 
+regles = Regle()
 
 while running:
     
     screen.blit(background,(0,0))
     screen.blit(grille_jeu.listecase[0].image, grille_jeu.listecase[0].position)
+    screen.blit(regles.image, regles.position)
     
     for k in range(0,100):
         screen.blit(grille_jeu.listecase[k].image, grille_jeu.listecase[k].position)

@@ -50,5 +50,6 @@ class Bombe(pygame.sprite.Sprite):
                 self.deplacer(415+a*25, 235+b*25)
                 a = 1
                 self.grille.listecase[a+10*b].pleine = 1
+    
             
         
