@@ -3,7 +3,7 @@ import numpy as np
 
 class Teleportation(pygame.sprite.Sprite):
     
-    def __init__(self, x, y,a, grille):
+    def __init__(self, x, y, a, grille):
         self.grille = grille
         self.image = pygame.image.load(a)
         self.position = self.image.get_rect()
@@ -19,14 +19,3 @@ class Teleportation(pygame.sprite.Sprite):
     def deplacer(self,x,y):
         self.position.x = x
         self.position.y = y
-    
-    def random(self):
-        a = 0
-        while a == 0:
-            a = np.random.randint(1,9)
-            b = np.random.randint(1,10)
-            
-            if self.grille.listecase[a+10*b].pleine == 0:
-                self.deplacer(415+a*25, 235+b*25)
-                a = 1
-                self.grille.listecase[a+10*b].pleine = 1
