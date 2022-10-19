@@ -5,6 +5,8 @@ Created on Wed Oct  5 15:05:43 2022
 @author: mahor
 """
 
+from timeit import Timer
+from traceback import print_tb
 import pygame
 pygame.init()
 
@@ -15,6 +17,7 @@ from teleportation import Teleportation
 from ligne import Ligne
 from ligneV import LigneV
 from regle import Regle
+from chrono import Chrono
 
 
 pygame.display.set_caption("Splateil")
@@ -63,7 +66,14 @@ file = 'song/musique.mp3'
 
 regles = Regle()
 
+zero= pygame.time.get_ticks()
+clock=pygame.time.Clock()
+        
+
+
 while running:
+    
+
     
     screen.blit(background,(0,0))
     screen.blit(grille_jeu.listecase[0].image, grille_jeu.listecase[0].position)
@@ -197,10 +207,33 @@ while running:
         textdisplay=tie.get_rect()
         textdisplay.center=(530,150)
         screen.blit(tie,textdisplay)
+        
+
     
     pygame.display.flip() 
-    
-    
+    clock.tick(60)
+    time=Chrono().chrono()
+    zzz=(time-zero)
+    if zzz>7000 and whitecase!=0 :
+        zero=pygame.time.get_ticks()
+        test_bombe.reactiver()
+        test_bombe.random()
+        test_bombe2.reactiver()
+        test_bombe2.random()
+        
+        test_ligne.reactiver()
+        test_ligne.random()
+        ligneV.reactiver()
+        ligneV.random()
+        
+        piegeB.reactiver()
+        piegeB.random()
+        #piegeB.invisible()
+        piegeL.reactiver()
+        piegeL.random()
+        #piegeL.invisible()
+        test_ligne2.reactiver()
+        test_ligne2.random()
     
     for event in pygame.event.get():
         
@@ -211,7 +244,8 @@ while running:
             pygame.quit()
             
         if whitecase!=0 :
-        
+            
+            
             if event.type == pygame.KEYDOWN :
                 if event.key == pygame.K_r:
                         grille_jeu.listecase[35].change_color(1)
